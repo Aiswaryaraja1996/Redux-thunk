@@ -41,7 +41,35 @@ export const handleLogin = (loginDetails) => (dispatch) => {
       console.log(res);
       const loginAction = actions.loginUser(res.data.token);
       dispatch(loginAction);
-      alert("Login Successful");
+    })
+    .catch((err) => alert(err.message));
+};
+
+export const getProfile = (userName, token) => (dispatch) => {
+  const config = {
+    url: `http://localhost:8080/user/${userName}`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return axios(config)
+    .then((res) => {
+      const profileAction = actions.setProfile(res.data);
+      dispatch(profileAction);
+    })
+    .catch((err) => alert(err.message));
+};
+
+export const getUserDtls = (user,page=1,perPage=5) => (dispatch) => {
+  const config = {
+    url: `https://api.github.com/search/users?q=${user}&page=${page}&per_page=${perPage}`,
+    method: "GET",
+  };
+  return axios(config)
+    .then((res) => {
+      const userAction = actions.getUsers(res.data);
+      dispatch(userAction);
     })
     .catch((err) => alert(err.message));
 };
